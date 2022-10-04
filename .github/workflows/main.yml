@@ -15,8 +15,5 @@ jobs:
       - name: Install 🔧
         run: npm install
 
-      - name: Test 🚨
-        run: npm test
-
       - name: Workflow done!
         run: echo "Workflow done"
