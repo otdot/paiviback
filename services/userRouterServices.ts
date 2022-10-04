@@ -1,6 +1,48 @@
 import Market from "../models/market";
 import User from "../models/user";
 import { Request, Response } from "express";
+import { toNewUser } from "./validate";
+import bcrypt from "bcrypt";
+import { UserType } from "./types/interface";
+
+export const createUser = (req: Request, res: Response) => {
+  const user = toNewUser(req.body);
+  User.findOne({ name: user.name })
+    .then((response: UserType | null) => {
+      //this return below might cause an error, because its not returning something in every possible case.
+      if (response) {
+        res.status(400).json({ error: "name must be unique" });
+        return;
+      }
+    })
+    .catch((err) => {
+      //later add next func here
+      console.log(`Something went wrong(userRouter.post: /): ${err}`);
+    });
+
+  bcrypt
+    .hash(user.passwordHash, "10")
+    .then((hashedpass) => {
+      const newUser = new User({
+        name: user.name,
+        passwordHash: hashedpass,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        market: user.market,
+        position: user.position,
+      });
+
+      newUser
+        .save()
+        .then(() => {
+          console.log(`new user ${newUser.name} created`);
+          res.json(newUser);
+        })
+        .catch((err: unknown) =>
+          console.log(`Something went wrong(userRouter.post: /): ${err}`)
+        );
+    })
+    .catch((err) => res.status(400).send(`couldnt save user ${err}`));
+};
 
 export const updateWorkingPlace = (req: Request, res: Response) => {
   Market.findById(req.body.id)

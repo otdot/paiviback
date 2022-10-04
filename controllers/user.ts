@@ -1,7 +1,6 @@
 import express from "express";
 import User from "../models/user";
-import { updateWorkingPlace } from "../services/userRouterServices";
-import { toNewUser } from "../services/validate";
+import { createUser, updateWorkingPlace } from "../services/userRouterServices";
 
 const userRouter = express.Router();
 
@@ -13,23 +12,7 @@ userRouter.get("/", (_req, res) => {
     );
 });
 
-userRouter.post("/", (req, res) => {
-  const user = toNewUser(req.body);
-
-  const newUser = new User({
-    name: user.name,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    market: user.market,
-    position: user.position,
-  });
-
-  newUser
-    .save()
-    .then(() => res.json(newUser))
-    .catch((err: unknown) =>
-      console.log(`Something went wrong(userRouter.post: /): ${err}`)
-    );
-});
+userRouter.post("/", createUser);
 
 userRouter.patch("/:id", updateWorkingPlace);
 

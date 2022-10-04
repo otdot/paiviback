@@ -6,7 +6,10 @@ import {
   UserType,
 } from "./types/interface";
 
-type NewUserType = Pick<UserType, "name" | "market" | "position">;
+export type NewUserType = Pick<
+  UserType,
+  "name" | "passwordHash" | "market" | "position"
+>;
 type NewProductType = Pick<ProductType, "name" | "division" | "supplier">;
 export type NewStorageProductType = Pick<
   StorageProductType,
@@ -91,6 +94,7 @@ export const toNewMarket = (object: any): NewMarketType => {
 export const toNewUser = (object: any): NewUserType => {
   const newUser = {
     name: parseString(object.name),
+    passwordHash: parseString(object.password),
     position: parseString(object.position),
   };
 

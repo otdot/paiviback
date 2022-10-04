@@ -3,6 +3,7 @@ import { UserType } from "../services/types/interface";
 
 const userSchema = new mongoose.Schema<UserType>({
   name: { type: String, required: true },
+  passwordHash: String,
   market: { type: mongoose.Schema.Types.ObjectId, ref: "Market" },
   position: String,
 });
