@@ -14,6 +14,7 @@ export const createUser = (req: Request, res: Response) => {
         res.status(400).json({ error: "name must be unique" });
         return;
       }
+      console.log("Username OK");
     })
     .catch((err) => {
       //later add next func here
@@ -21,13 +22,11 @@ export const createUser = (req: Request, res: Response) => {
     });
 
   bcrypt
-    .hash(user.passwordHash, "10")
+    .hash(user.passwordHash, 10)
     .then((hashedpass) => {
       const newUser = new User({
         name: user.name,
         passwordHash: hashedpass,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        market: user.market,
         position: user.position,
       });
 
@@ -35,7 +34,7 @@ export const createUser = (req: Request, res: Response) => {
         .save()
         .then(() => {
           console.log(`new user ${newUser.name} created`);
-          res.json(newUser);
+          res.status(200).json(newUser);
         })
         .catch((err: unknown) =>
           console.log(`Something went wrong(userRouter.post: /): ${err}`)

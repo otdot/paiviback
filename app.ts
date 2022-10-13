@@ -3,6 +3,7 @@ import morgan from "morgan";
 import middleware from "./utils/middleware";
 import pingRouter from "./controllers/ping";
 import productRouter from "./controllers/product";
+import cors from "cors";
 
 import { runServer } from "./server";
 import userRouter from "./controllers/user";
@@ -10,6 +11,7 @@ import marketRouter from "./controllers/market";
 runServer().catch((err) => console.log(err));
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(middleware.requestLogger);
