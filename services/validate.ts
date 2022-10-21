@@ -35,7 +35,7 @@ const parseNumber = (number: unknown): number => {
   return number;
 };
 
-const parseString = (text: unknown): string => {
+export const parseString = (text: unknown): string => {
   if (!text || !isString(text)) {
     throw new Error("Missing or malformatted data");
   }
@@ -76,14 +76,6 @@ export const toNewMarket = (object: any): NewMarketType => {
   const productPlacements: ProductPlacement[] = object.productPlacements.map(
     (placement: ProductPlacement) => toNewProductPlacement(placement)
   );
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  // const personnel: Array<UserType["id"]> = object.personnel.map(
-  //   (employee: UserType) => parseString(employee.id)
-  // );
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  // const storage: Array<StorageProductType["id"]> = object.storage.map(
-  //   (batch: StorageProductType) => toNewStorageProductType(batch)
-  // );
   const newMarket = {
     name: parseString(object.name),
     productPlacements,

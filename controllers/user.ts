@@ -1,7 +1,11 @@
 import express from "express";
 import User from "../models/user";
-import { createUser, updateWorkingPlace } from "../services/userRouterServices";
-
+import {
+  createUser,
+  getUserMarket,
+  updateWorkingPlace,
+} from "../services/userRouterServices";
+import middleware from "../utils/middleware";
 const userRouter = express.Router();
 
 userRouter.get("/", (_req, res) => {
@@ -11,6 +15,7 @@ userRouter.get("/", (_req, res) => {
       console.log(`An unexpected error occurred: ${err}`)
     );
 });
+userRouter.get("/market", middleware.userExtractor, getUserMarket);
 
 userRouter.post("/", createUser);
 

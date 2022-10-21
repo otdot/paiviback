@@ -1,3 +1,5 @@
+import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
 import { Document } from "mongoose";
 
 export interface ProductPlacement {
@@ -29,4 +31,14 @@ export interface MarketType extends Document {
   productPlacements: Array<ProductPlacement>;
   personnel?: Array<UserType["id"]>;
   storage?: Array<StorageProductType["id"]>;
+}
+
+export interface UserForToken {
+  name: string | undefined;
+  id: string | undefined;
+}
+
+export interface IRequest extends Request {
+  token?: string;
+  user?: any | JwtPayload;
 }
