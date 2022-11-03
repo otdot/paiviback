@@ -47,7 +47,9 @@ const errorHandler = (
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return res.status(400).send({ error: err.message });
   } else if (err.name === "JsonWebTokenError") {
-    return res.status(400).send({ error: "invalid or missing token" });
+    return res
+      .status(400)
+      .send({ error: "JsonWebTokenError: invalid or missing token" });
   } else {
     return next(err);
   }

@@ -23,12 +23,16 @@ export const handleOrder = (req: Request, res: Response) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const newOrders: StorageProductType[] = req.body.orders.map(
           (order: NewStorageProductType) => {
-            return new StorageProduct(toNewStorageProductType(order));
+            const product = new StorageProduct(toNewStorageProductType(order));
+            product
+              .save()
+              .then(() => console.log("product saved"))
+              .catch((err) => console.log(err));
+            return product;
           }
         );
 
-        const newStorage = market.storage?.concat(newOrders);
-        market.storage = newStorage;
+        market.storage = market.storage?.concat(newOrders);
         market
           .save()
           .then(() => res.status(200).json(market))

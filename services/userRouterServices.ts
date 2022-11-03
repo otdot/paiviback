@@ -88,7 +88,9 @@ export const getUserMarket = async (req: IRequest, res: Response) => {
   }
   const user = await User.findById(decodedUser.id);
   if (user) {
-    const market = await Market.findById(user.market);
+    const market = await Market.findById(user.market)
+      .populate("storage")
+      .populate("personnel", { name: 1, position: 1, id: 1 });
     return res.status(200).json(market);
   }
   return res.status(400).json({

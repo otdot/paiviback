@@ -6,7 +6,8 @@ import { toNewMarket } from "../services/validate";
 const marketRouter = express.Router();
 
 marketRouter.get("/", (_req, res) => {
-  Market.find()
+  Market.find({})
+    .populate("storage")
     .then((market) => res.status(200).json(market))
     .catch((err) => console.log(err));
 });

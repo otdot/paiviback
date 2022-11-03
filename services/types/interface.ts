@@ -29,8 +29,8 @@ export interface UserType extends Document {
 export interface MarketType extends Document {
   name: string;
   productPlacements: Array<ProductPlacement>;
-  personnel?: Array<UserType["id"]>;
-  storage?: Array<StorageProductType["id"]>;
+  personnel?: Array<UserType>;
+  storage?: Array<StorageProductType>;
 }
 
 export interface UserForToken {

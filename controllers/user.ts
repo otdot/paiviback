@@ -15,6 +15,7 @@ userRouter.get("/", (_req, res) => {
       console.log(`An unexpected error occurred: ${err}`)
     );
 });
+
 userRouter.get("/market", middleware.userExtractor, getUserMarket);
 
 userRouter.post("/", createUser);
