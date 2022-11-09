@@ -29,6 +29,7 @@ marketRouter.post("/", (req, res) => {
 });
 
 marketRouter.get("/:id", handleGetMarket);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 marketRouter.patch("/:id", handleOrder);
 
 export default marketRouter;
