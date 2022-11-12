@@ -9,6 +9,7 @@ import { runServer } from "./server";
 import userRouter from "./controllers/user";
 import marketRouter from "./controllers/market";
 import loginRouter from "./controllers/login";
+import storageProductRouter from "./controllers/storageProduct";
 runServer().catch((err) => console.log(err));
 
 const app = express();
@@ -23,6 +24,7 @@ app.use("/products", productRouter);
 app.use("/users", userRouter);
 app.use("/market", marketRouter);
 app.use("/login", loginRouter);
+app.use("/storageproducts", storageProductRouter);
 
 app.use(middleware.errorHandler);
 app.use(middleware.unknownEndpoint);

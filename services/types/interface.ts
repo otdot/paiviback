@@ -17,6 +17,7 @@ export interface StorageProductType extends ProductType {
   amount: number;
   unit: string;
   lotnum: string;
+  bestbefore: string;
 }
 
 export interface UserType extends Document {

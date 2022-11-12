@@ -13,12 +13,16 @@ export type NewUserType = Pick<
 type NewProductType = Pick<ProductType, "name" | "division" | "supplier">;
 export type NewStorageProductType = Pick<
   StorageProductType,
-  "name" | "division" | "supplier" | "amount" | "unit" | "lotnum"
+  "name" | "division" | "supplier" | "amount" | "unit" | "lotnum" | "bestbefore"
 >;
 type NewMarketType = Pick<
   MarketType,
   "name" | "productPlacements" | "personnel" | "storage"
 >;
+
+const isDate = (date: string): boolean => {
+  return Boolean(Date.parse(date));
+};
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -42,6 +46,13 @@ export const parseString = (text: unknown): string => {
   return text;
 };
 
+const parseDate = (date: unknown): string => {
+  if (!date || !isString(date) || !isDate(date)) {
+    throw new Error("Date not formatted right. Incorrect or missing content");
+  }
+  return date;
+};
+
 export const toNewStorageProductType = (object: any): NewStorageProductType => {
   const newStorageProductType = {
     name: parseString(object.name),
@@ -50,6 +61,7 @@ export const toNewStorageProductType = (object: any): NewStorageProductType => {
     amount: parseNumber(object.amount),
     unit: parseString(object.unit),
     lotnum: parseString(object.lotnum),
+    bestbefore: parseDate(object.bestbefore),
   };
   return newStorageProductType;
 };
