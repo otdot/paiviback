@@ -88,6 +88,7 @@ export const toNewMarket = (object: any): NewMarketType => {
   const productPlacements: ProductPlacement[] = object.productPlacements.map(
     (placement: ProductPlacement) => toNewProductPlacement(placement)
   );
+
   const newMarket = {
     name: parseString(object.name),
     productPlacements,

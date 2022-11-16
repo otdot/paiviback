@@ -3,7 +3,6 @@ import Product from "../models/product";
 import { toNewProduct } from "../services/validate";
 
 const productRouter = express.Router();
-//Routes could be implemented to retutn Awaited<Type>
 
 productRouter.get("/", (_req, res) => {
   Product.find()

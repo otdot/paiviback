@@ -42,7 +42,6 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
         });
     })
     .catch((err) => res.status(400).send(`couldnt save user ${err}`));
-  next();
 };
 
 //TODO: Marketin henkilökunta ei päivity samalla.
@@ -53,18 +52,31 @@ export const updateWorkingPlace = (
 ) => {
   Market.findById(req.body.id)
     .then((market) => {
-      const foundmarket = market;
       User.findById(req.params.id)
         .then((user) => {
           if (user) {
-            user.market = foundmarket;
+            user.market = market;
             user
               .save()
-              .then(() => res.status(200).json(user))
+              .then(() => {
+                if (market) {
+                  market.personnel = market.personnel?.concat(user);
+                  market
+                    .save()
+                    .then(() => res.status(200).json({ user, market }))
+                    .catch((err: unknown) =>
+                      res
+                        .status(400)
+                        .send(
+                          `Something went wrong(userRouter.patch: /): ${err}`
+                        )
+                    );
+                }
+              })
               .catch((err: unknown) =>
                 res
                   .status(400)
-                  .send(`Something went wrong(userRouter.post: /): ${err}`)
+                  .send(`Something went wrong(userRouter.patch: /): ${err}`)
               );
           }
         })

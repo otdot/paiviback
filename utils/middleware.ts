@@ -21,6 +21,15 @@ const userExtractor = (req: IRequest, _res: Response, next: NextFunction) => {
   next();
 };
 
+const authUser = (req: IRequest, res: Response, next: NextFunction) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const decodedUser = req.user;
+
+  if (!decodedUser || !decodedUser.id) {
+    res.status(400).json({ error: "User not found" });
+  }
+  next();
+};
 const requestLogger: RequestHandler = (
   req: Request,
   _res: Response,
@@ -61,4 +70,5 @@ export default {
   errorHandler,
   userExtractor,
   tokenExtractor,
+  authUser,
 };
