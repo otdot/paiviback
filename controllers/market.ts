@@ -1,6 +1,10 @@
 import express from "express";
 import Market from "../models/market";
-import { handleOrder, handleGetMarket } from "../services/marketRouterService";
+import {
+  handleOrder,
+  handleGetMarket,
+  updateDivisions,
+} from "../services/marketRouterService";
 import { toNewMarket } from "../services/validate";
 
 const marketRouter = express.Router();
@@ -30,6 +34,9 @@ marketRouter.post("/", (req, res) => {
 
 marketRouter.get("/:id", handleGetMarket);
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-marketRouter.patch("/:id", handleOrder);
+marketRouter.patch("/order/:id", handleOrder);
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-misused-promises
+marketRouter.patch("/placements/:id", updateDivisions);
 
 export default marketRouter;

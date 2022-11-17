@@ -75,7 +75,9 @@ export const toNewProduct = (object: any): NewProductType => {
   return newProduct;
 };
 
-const toNewProductPlacement = (productPlacement: any): ProductPlacement => {
+export const toNewProductPlacement = (
+  productPlacement: any
+): ProductPlacement => {
   const newProductPlacement = {
     division: parseString(productPlacement.division),
     aisle: parseNumber(productPlacement.aisle),

@@ -43,3 +43,7 @@ export interface IRequest extends Request {
   token?: string;
   user?: any | JwtPayload;
 }
+
+export interface TypedPlacementRequest<T> extends Request {
+  body: T[];
+}

@@ -44,7 +44,6 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
     .catch((err) => res.status(400).send(`couldnt save user ${err}`));
 };
 
-//TODO: Marketin henkilökunta ei päivity samalla.
 export const updateWorkingPlace = (
   req: Request,
   res: Response,
