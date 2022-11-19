@@ -1,6 +1,7 @@
 import express from "express";
 import Product from "../models/product";
 import { toNewProduct } from "../services/validate";
+import { deleteProduct, updateProduct } from "../services/productRouterService";
 
 const productRouter = express.Router();
 
@@ -32,5 +33,10 @@ productRouter.get("/:id", (req, res) => {
     .then((product) => res.status(200).json({ product }))
     .catch((error: unknown) => res.status(500).json({ error }));
 });
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+productRouter.patch("/:id", updateProduct);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+productRouter.delete("/:id", deleteProduct);
 
 export default productRouter;

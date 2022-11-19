@@ -6,6 +6,7 @@ import {
   updateDivisions,
 } from "../services/marketRouterService";
 import { toNewMarket } from "../services/validate";
+import middleware from "../utils/middleware";
 
 const marketRouter = express.Router();
 
@@ -34,9 +35,17 @@ marketRouter.post("/", (req, res) => {
 
 marketRouter.get("/:id", handleGetMarket);
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-marketRouter.patch("/order/:id", handleOrder);
+marketRouter.patch(
+  "/order/:id",
+  [middleware.userExtractor, middleware.authUser],
+  handleOrder
+);
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-misused-promises
-marketRouter.patch("/placements/:id", updateDivisions);
+marketRouter.patch(
+  "/placements/:id",
+  [middleware.userExtractor, middleware.authUser],
+  updateDivisions
+);
 
 export default marketRouter;

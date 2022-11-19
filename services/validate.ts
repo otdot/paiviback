@@ -1,3 +1,4 @@
+import { Divisions } from "./types/enum";
 import {
   MarketType,
   ProductPlacement,
@@ -32,16 +33,30 @@ const isNumber = (number: unknown): number is number => {
   return typeof number === "number" || number instanceof Number;
 };
 
+const isDivision = (division: any): division is Divisions => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return Object.values(Divisions).includes(division);
+};
+
+export const parseDivision = (Division: unknown): Divisions => {
+  if (!Division || !isDivision(Division)) {
+    throw new Error(
+      "Divison not formatted right. Missing or malformatted data"
+    );
+  }
+  return Division;
+};
+
 const parseNumber = (number: unknown): number => {
   if (!number || !isNumber(number)) {
-    throw new Error("missing or malformatted data");
+    throw new Error("Number not formatted right. Missing or malformatted data");
   }
   return number;
 };
 
 export const parseString = (text: unknown): string => {
   if (!text || !isString(text)) {
-    throw new Error("Missing or malformatted data");
+    throw new Error("String not formatted right. Missing or malformatted data");
   }
   return text;
 };

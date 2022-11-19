@@ -9,11 +9,13 @@ import {
   toNewStorageProductType,
 } from "./validate";
 import {
+  IRequest,
   MarketType,
   ProductPlacement,
   ProductType,
   StorageProductType,
 } from "./types/interface";
+import User from "../models/user";
 
 export const handleGetMarket = (req: Request, res: Response) => {
   Market.findById(req.params.id)
@@ -49,30 +51,39 @@ const saveOrders = (
 };
 
 export const handleOrder = async (
-  req: Request,
+  req: IRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const products: ProductType[] = await Product.find();
-    const productNames: string[] = products.map((p: ProductType) => p.name);
-    const market = await Market.findById(req.params.id);
-    if (market) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      const newOrders: StorageProductType[] = req.body.orders.map(
-        (order: NewStorageProductType) => saveOrders(order, productNames)
-      );
-      market.storage = market.storage?.concat(newOrders);
+    const user = await User.findById(req.user.id);
+    if (user && ["Kauppias", "Esimies"].includes(user.position)) {
       try {
-        await market.save();
-        res.status(200).json(market);
+        const products: ProductType[] = await Product.find();
+        const productNames: string[] = products.map((p: ProductType) => p.name);
+        const market = await Market.findById(req.params.id);
+        if (market) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+          const newOrders: StorageProductType[] = req.body.orders.map(
+            (order: NewStorageProductType) => saveOrders(order, productNames)
+          );
+          market.storage = market.storage?.concat(newOrders);
+          try {
+            await market.save();
+            res.status(200).json(market);
+          } catch (err: unknown) {
+            res.status(400).json(`Error while saving market. Error: ${err}`);
+          }
+        } else {
+          res.status(400).json("Couldn't find market");
+        }
       } catch (err: unknown) {
-        res.status(400).json(`Error while saving market. Error: ${err}`);
+        res.status(404).json(`Couldn't find products or market. ${err}`);
       }
     } else {
-      res.status(400).json("Couldn't find market");
+      res.status(403).send(`Employee not authorized to submit orders`);
     }
-  } catch (err: unknown) {
-    res.status(404).json(`Couldn't find products or market. ${err}`);
+  } catch (err) {
+    res.status(404).send(`user not found. Error ${err}`);
   }
 };
 
@@ -90,31 +101,40 @@ const newDivisions = (placement: ProductPlacement, market: MarketType) => {
 };
 
 export const updateDivisions = async (
-  req: Request,
+  req: IRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const market = await Market.findById(req.params.id);
-    if (market) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const productPlacements: ProductPlacement[] =
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        req.body.productPlacements.map((placement: ProductPlacement) =>
-          newDivisions(placement, market)
-        );
-
-      market.productPlacements =
-        market.productPlacements.concat(productPlacements);
+    const user = await User.findById(req.user.id);
+    if (user && ["Kauppias", "Esimies"].includes(user.position)) {
       try {
-        await market.save();
-        res.status(200).json(market);
+        const market = await Market.findById(req.params.id);
+        if (market) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const productPlacements: ProductPlacement[] =
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            req.body.productPlacements.map((placement: ProductPlacement) =>
+              newDivisions(placement, market)
+            );
+
+          market.productPlacements =
+            market.productPlacements.concat(productPlacements);
+          try {
+            await market.save();
+            res.status(200).json(market);
+          } catch (err) {
+            res
+              .status(400)
+              .send(`Couldn't update market productplacements. Error: ${err}`);
+          }
+        }
       } catch (err) {
-        res
-          .status(400)
-          .send(`Couldn't update market productplacements. Error: ${err}`);
+        res.status(404).send(`market not found. Error ${err}`);
       }
+    } else {
+      res.status(403).send(`Employee not authorized to update divisions`);
     }
   } catch (err) {
-    res.status(404).send(`market not found. Error ${err}`);
+    res.status(404).send(`user not found. Error ${err}`);
   }
 };

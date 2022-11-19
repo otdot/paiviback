@@ -91,13 +91,7 @@ export const updateWorkingPlace = (
 };
 
 export const getUserMarket = async (req: IRequest, res: Response) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const decodedUser = req.user;
-
-  if (!decodedUser || !decodedUser.id) {
-    return res.status(400).json({ error: "token invalid or missing" });
-  }
-  const user = await User.findById(decodedUser.id);
+  const user = await User.findById(req.user.id);
   if (user) {
     const market = await Market.findById(user.market)
       .populate("storage")

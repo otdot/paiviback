@@ -20,9 +20,9 @@ app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
 
 app.use("/ping", pingRouter);
+app.use("/market", marketRouter);
 app.use("/products", productRouter);
 app.use("/users", userRouter);
-app.use("/market", marketRouter);
 app.use("/login", loginRouter);
 app.use("/storageproducts", storageProductRouter);
 
