@@ -1,12 +1,18 @@
 import express from "express";
 import Market from "../models/market";
-import { handleOrder, handleGetMarket } from "../services/marketRouterService";
+import {
+  handleOrder,
+  handleGetMarket,
+  updateDivisions,
+} from "../services/marketRouterService";
 import { toNewMarket } from "../services/validate";
+import middleware from "../utils/middleware";
 
 const marketRouter = express.Router();
 
 marketRouter.get("/", (_req, res) => {
-  Market.find()
+  Market.find({})
+    .populate("storage")
     .then((market) => res.status(200).json(market))
     .catch((err) => console.log(err));
 });
@@ -28,6 +34,18 @@ marketRouter.post("/", (req, res) => {
 });
 
 marketRouter.get("/:id", handleGetMarket);
-marketRouter.patch("/:id", handleOrder);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+marketRouter.patch(
+  "/order/:id",
+  [middleware.userExtractor, middleware.authUser],
+  handleOrder
+);
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-misused-promises
+marketRouter.patch(
+  "/placements/:id",
+  [middleware.userExtractor, middleware.authUser],
+  updateDivisions
+);
 
 export default marketRouter;

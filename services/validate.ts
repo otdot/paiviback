@@ -1,3 +1,4 @@
+import { Divisions } from "./types/enum";
 import {
   MarketType,
   ProductPlacement,
@@ -13,12 +14,16 @@ export type NewUserType = Pick<
 type NewProductType = Pick<ProductType, "name" | "division" | "supplier">;
 export type NewStorageProductType = Pick<
   StorageProductType,
-  "name" | "division" | "supplier" | "amount" | "unit" | "lotnum"
+  "name" | "division" | "supplier" | "amount" | "unit" | "lotnum" | "bestbefore"
 >;
 type NewMarketType = Pick<
   MarketType,
   "name" | "productPlacements" | "personnel" | "storage"
 >;
+
+const isDate = (date: string): boolean => {
+  return Boolean(Date.parse(date));
+};
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -28,18 +33,39 @@ const isNumber = (number: unknown): number is number => {
   return typeof number === "number" || number instanceof Number;
 };
 
+const isDivision = (division: any): division is Divisions => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return Object.values(Divisions).includes(division);
+};
+
+export const parseDivision = (Division: unknown): Divisions => {
+  if (!Division || !isDivision(Division)) {
+    throw new Error(
+      "Divison not formatted right. Missing or malformatted data"
+    );
+  }
+  return Division;
+};
+
 const parseNumber = (number: unknown): number => {
   if (!number || !isNumber(number)) {
-    throw new Error("missing or malformatted data");
+    throw new Error("Number not formatted right. Missing or malformatted data");
   }
   return number;
 };
 
-const parseString = (text: unknown): string => {
+export const parseString = (text: unknown): string => {
   if (!text || !isString(text)) {
-    throw new Error("Missing or malformatted data");
+    throw new Error("String not formatted right. Missing or malformatted data");
   }
   return text;
+};
+
+const parseDate = (date: unknown): string => {
+  if (!date || !isString(date) || !isDate(date)) {
+    throw new Error("Date not formatted right. Incorrect or missing content");
+  }
+  return date;
 };
 
 export const toNewStorageProductType = (object: any): NewStorageProductType => {
@@ -50,6 +76,7 @@ export const toNewStorageProductType = (object: any): NewStorageProductType => {
     amount: parseNumber(object.amount),
     unit: parseString(object.unit),
     lotnum: parseString(object.lotnum),
+    bestbefore: parseDate(object.bestbefore),
   };
   return newStorageProductType;
 };
@@ -63,7 +90,9 @@ export const toNewProduct = (object: any): NewProductType => {
   return newProduct;
 };
 
-const toNewProductPlacement = (productPlacement: any): ProductPlacement => {
+export const toNewProductPlacement = (
+  productPlacement: any
+): ProductPlacement => {
   const newProductPlacement = {
     division: parseString(productPlacement.division),
     aisle: parseNumber(productPlacement.aisle),
@@ -76,14 +105,7 @@ export const toNewMarket = (object: any): NewMarketType => {
   const productPlacements: ProductPlacement[] = object.productPlacements.map(
     (placement: ProductPlacement) => toNewProductPlacement(placement)
   );
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  // const personnel: Array<UserType["id"]> = object.personnel.map(
-  //   (employee: UserType) => parseString(employee.id)
-  // );
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  // const storage: Array<StorageProductType["id"]> = object.storage.map(
-  //   (batch: StorageProductType) => toNewStorageProductType(batch)
-  // );
+
   const newMarket = {
     name: parseString(object.name),
     productPlacements,

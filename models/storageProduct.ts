@@ -8,6 +8,7 @@ const storageProductSchema = new mongoose.Schema<StorageProductType>({
   amount: { type: Number, required: true },
   unit: { type: String, required: true },
   lotnum: { type: String, required: true },
+  bestbefore: { type: String, required: true },
 });
 
 export default mongoose.model<StorageProductType>(
