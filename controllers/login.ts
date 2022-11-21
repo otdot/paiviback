@@ -18,17 +18,19 @@ loginRouter.post("/", async (req, res): Promise<void> => {
 
   if (!(user && passwordCorrect)) {
     res.status(401).json({ error: "invalid username or password" });
+  } else {
+    const userForToken: UserForToken = {
+      name: user?.name,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      id: user?._id,
+    };
+    const token = jwt.sign(userForToken, SECRET as string, {
+      expiresIn: 60 * 60 * 24,
+    });
+    res
+      .status(200)
+      .json({ token, name: userForToken.name, id: userForToken.id });
   }
-
-  const userForToken: UserForToken = {
-    name: user?.name,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    id: user?._id,
-  };
-  const token = jwt.sign(userForToken, SECRET as string, {
-    expiresIn: 60 * 60 * 24,
-  });
-  res.status(200).json({ token, name: userForToken.name, id: userForToken.id });
 });
 
 export default loginRouter;
