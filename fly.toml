@@ -1,4 +1,4 @@
-# fly.toml file generated for paivipaivittaja on 2022-11-21T17:01:04+02:00
+# fly.toml file generated for paivipaivittaja on 2022-11-21T20:17:08+02:00
 
 app = "paivipaivittaja"
 kill_signal = "SIGINT"
@@ -15,7 +15,6 @@ processes = []
   allowed_public_ports = []
   auto_rollback = true
   cmd = "npm start"
-
 
 [[services]]
   http_checks = []
