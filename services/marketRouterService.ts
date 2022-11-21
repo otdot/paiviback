@@ -58,9 +58,7 @@ export const handleOrder = async (
     const user = await User.findById(req.user.id);
     if (
       user &&
-      ["Kauppias", "Esimies", "Supervisor", "Store owner"].includes(
-        user.position
-      )
+      ["Kauppias", "Esimies", "Supervisor", "Owner"].includes(user.position)
     ) {
       try {
         const products: ProductType[] = await Product.find();
@@ -111,7 +109,7 @@ export const updateDivisions = async (
 ): Promise<void> => {
   try {
     const user = await User.findById(req.user.id);
-    if (user && ["Kauppias", "Store owner"].includes(user.position)) {
+    if (user && ["Kauppias", "Owner"].includes(user.position)) {
       try {
         const market = await Market.findById(req.params.id);
         if (market) {
