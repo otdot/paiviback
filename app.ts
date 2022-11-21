@@ -13,6 +13,7 @@ import storageProductRouter from "./controllers/storageProduct";
 runServer().catch((err) => console.log(err));
 
 const app = express();
+app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));

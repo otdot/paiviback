@@ -7,7 +7,7 @@
 ## To use
 
 - `npm install`
-- `npm run dev``
+- `npm run dev`
 
 ## Deployed
 
