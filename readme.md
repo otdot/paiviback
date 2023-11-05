@@ -8,7 +8,3 @@
 
 - `npm install`
 - `npm run dev`
-
-## Deployed
-
-https://paivipaivittaja.fly.dev/
