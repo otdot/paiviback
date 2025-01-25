@@ -23,7 +23,7 @@ export interface StorageProductType extends ProductType {
 export interface UserType extends Document {
   name: string;
   passwordHash: string;
-  market?: MarketType["id"];
+  market?: MarketType["_id"];
   position: string;
 }
 

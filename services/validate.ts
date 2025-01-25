@@ -6,6 +6,7 @@ import {
   StorageProductType,
   UserType,
 } from "./types/interface";
+import Market from "../models/market"
 
 export type NewUserType = Pick<
   UserType,
@@ -38,6 +39,10 @@ const isDivision = (division: any): division is Divisions => {
   return Object.values(Divisions).includes(division);
 };
 
+const isMarket = (market: any): market is MarketType => {
+  return market instanceof Market;
+};
+
 export const parseDivision = (Division: unknown): Divisions => {
   if (!Division || !isDivision(Division)) {
     throw new Error(
@@ -59,6 +64,13 @@ export const parseString = (text: unknown): string => {
     throw new Error("String not formatted right. Missing or malformatted data");
   }
   return text;
+};
+
+export const parseMarket = (market: unknown): MarketType => {
+  if (!market || !isMarket(market)) {
+    throw new Error("Missing or malformatted data. Market is missing or didn't pass validation.");
+  }
+  return market;
 };
 
 const parseDate = (date: unknown): string => {
@@ -116,6 +128,7 @@ export const toNewMarket = (object: any): NewMarketType => {
 export const toNewUser = (object: any): NewUserType => {
   const newUser = {
     name: parseString(object.name),
+    // market: parseMarket(object.market),
     passwordHash: parseString(object.password),
     position: parseString(object.position),
   };
