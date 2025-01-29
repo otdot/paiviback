@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import path from 'path';
 import middleware from "./utils/middleware";
 import pingRouter from "./controllers/ping";
 import productRouter from "./controllers/product";
@@ -21,11 +22,17 @@ app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
 
 app.use("/ping", pingRouter);
-app.use("/market", marketRouter);
+app.use("/markets", marketRouter);
 app.use("/products", productRouter);
 app.use("/users", userRouter);
 app.use("/login", loginRouter);
 app.use("/storageproducts", storageProductRouter);
+
+// The wildcard (*) lets all paths bypass Express 
+// in favor of React handling client-side routing.
+app.get("/*", (_, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 app.use(middleware.errorHandler);
 app.use(middleware.unknownEndpoint);

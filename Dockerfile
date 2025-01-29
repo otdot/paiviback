@@ -10,6 +10,4 @@ COPY . .
 
 RUN npm run tsc
 
-COPY ./build /app/build
-
 CMD ["npm", "run", "start"]

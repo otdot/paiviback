@@ -35,7 +35,7 @@ const requestLogger: RequestHandler = (
   _res: Response,
   next: NextFunction
 ) => {
-  console.log(`M:${req.method}, P: ${req.path}, B: ${req.body}`);
+  console.log(`M:${req.method}, P: ${req.path}, B: ${JSON.stringify(req.body)}`);
   console.log("---");
   next();
 };
